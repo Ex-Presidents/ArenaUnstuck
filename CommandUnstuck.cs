@@ -64,13 +64,12 @@ namespace ArenaUnstuck
 			UnturnedPlayer player = (UnturnedPlayer)caller;
 
 
-			ArenaPlayer aPlayer = LevelManager.arenaPlayers.Find((ply) => !ply.hasDied && ply.steamPlayer.playerID.steamID == player.CSteamID);
+			ArenaPlayer aPlayer = LevelManager.arenaPlayers.Find((ply) => ply.steamPlayer.playerID.steamID == player.CSteamID);
 
-			if (aPlayer == null)
+			if (aPlayer == null || aPlayer.hasDied)
 			{
 				UnturnedChat.Say(player, Main.Instance.Translate("cant"), Main.Instance._configColour);
 			}
-
 
 
 			UnturnedChat.Say(player, Main.Instance.Translate("unstuck"), Main.Instance._configColour);

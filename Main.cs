@@ -20,14 +20,19 @@ namespace ArenaUnstuck
 		protected override void Load()
 		{
 			_configColour = Rocket.Unturned.Chat.UnturnedChat.GetColorFromName(Configuration.Instance.ChatColour, Color.green);
-
+			LevelManager.onArenaMessageUpdated += ArenaState;
 			Instance = this;
 			Rocket.Core.Logging.Logger.LogError("\n  _________                    __          \n /   _____/ ____  ____   _____/  |_ ___.__.\n \\_____  \\_/ ___\\/  _ \\ /  _ \\   __<   |  |\n /        \\  \\__(  <_> (  <_> |  |  \\___  |\n/_______  /\\___  \\____/ \\____/|__|  / ____|\n        \\/     \\/                   \\/     ");
 			Rocket.Core.Logging.Logger.Log("\n.___        \n|   | ______\n|   |/  ___/\n|   |\\___ \\ \n|___/____  >\n         \\/ ");
 			Rocket.Core.Logging.Logger.LogWarning("\n___.                  \n\\_ |__ _____    ____  \n | __ \\\\__  \\ _/ __ \\ \n | \\_\\ \\/ __ \\\\  ___/ \n |___  (____  /\\___  >\n     \\/     \\/     \\/ ");
 
-		}
 
+		}
+		protected override void Unload()
+		{
+			LevelManager.onArenaMessageUpdated -= ArenaState;
+
+		}
 
 		public override Rocket.API.Collections.TranslationList DefaultTranslations
 		{
@@ -42,15 +47,12 @@ namespace ArenaUnstuck
 		}
 
 
-		void Update()
+
+			
+		void ArenaState(EArenaMessage newArenaMessage)
 		{
-			if (DateTime.Now.Second - lastArenaCheck.Second > Main.Instance.Configuration.Instance.commandTimeUse)
-				return;
-
-			if (LevelManager.arenaState == EArenaState.WARMUP)
+			if(newArenaMessage == EArenaMessage.WARMUP)
 				lastArenaCheck = DateTime.Now;
-
-
 
 
 		}
@@ -61,7 +63,7 @@ namespace ArenaUnstuck
 
 			PlayerSpawnpoint point = closestSpawn(player, spawns);
 
-			if (Vector3.Distance(point.point, player.Position) > 32)
+			if (Vector3.Distance(point.point, player.Position) > 16)
 			{
 				UnturnedChat.Say(player, Main.Instance.Translate("cant"), Main.Instance._configColour);
 				return;
@@ -79,7 +81,7 @@ namespace ArenaUnstuck
 
 			player.Teleport(
 				new Vector3(point.point.x,
-				            point.point.y + 3,
+				            point.point.y + 2,
 				            point.point.z),
 				  			player.Rotation);
 		}
