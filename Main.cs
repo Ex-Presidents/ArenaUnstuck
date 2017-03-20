@@ -70,7 +70,7 @@ namespace ArenaUnstuck
 			}
 
 
-			if (DateTime.Now.Second - lastArenaCheck.Second > Instance.Configuration.Instance.commandTimeUse)
+			if ((DateTime.Now - lastArenaCheck).TotalSeconds > Instance.Configuration.Instance.commandTimeUse)
 			{
 				UnturnedChat.Say(player, Main.Instance.Translate("cant"), Main.Instance._configColour);
 				return;
